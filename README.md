@@ -24,3 +24,6 @@ GET     /api/Addresses/4 (Will return the address with id of 4)
 POST    /api/Addresses (Will create a new address record in the database)
 PATCH   /api/Addresses/4 (Will edit/update the address with new data wich has the id of 4)
 DELETE  /api/Addresses/4 (Will delete the address of id 4)
+
+To start the instance of Postgresql Database server:
+ docker compose -f ./docker-compose.yml up -d 
