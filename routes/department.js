@@ -15,7 +15,7 @@ departmentRoutes.get('/', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query('SELECT * FROM department')
+    const dbRes = await client.query(`SELECT * FROM department`);
     await client.end()
 
     res.status(200).json(dbRes.rows);
@@ -34,7 +34,7 @@ departmentRoutes.get('/:id', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query('SELECT "Id","Name" FROM department where "Id" = ' + req.params.id);
+    const dbRes = await client.query(`SELECT "Id","Name" FROM department where "Id" = ${req.params.id};` );
     await client.end()
 
     if (dbRes.rows.length == 0) {
@@ -61,7 +61,7 @@ departmentRoutes.post('/', async (req, res) => {
 
     const name = req.body.name;
 
-    const dbRes = await client.query('INSERT INTO department ( "Name") values (\'' + name + '\');');
+    const dbRes = await client.query(`INSERT INTO department SET "Name"=${name}`);
     await client.end()
 
     res.status(200).json(dbRes.rows);
@@ -80,7 +80,7 @@ departmentRoutes.delete('/:id', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query(' DELETE FROM department  WHERE "Id " = ' + req.params.id);
+    const dbRes = await client.query(` DELETE FROM department  WHERE "Id" = ${req.params.id};` );
     await client.end()
 
     if (dbRes.rows.length == 0) {
@@ -106,7 +106,8 @@ departmentRoutes.patch('/:id', async (req, res) => {
     const name = req.body.name;
     console.log('UPDATE public.department SET "Name"=\'' + name + '\' WHERE "Id"=' + req.params.id + ';');
 
-    const dbRes = await client.query('UPDATE public.department SET "Name"=\'' + name + '\' WHERE "Id"=' + req.params.id + ';');
+
+    const dbRes = await client.query(`UPDATE department SET "Name"='${name}'  WHERE "Id"= ${req.params.id};`);
     await client.end()
 
     if (dbRes.rowCount===0) {

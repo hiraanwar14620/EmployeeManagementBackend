@@ -15,7 +15,7 @@ employeeRoutes.get('/', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query('SELECT * FROM employee')
+    const dbRes = await client.query(`SELECT * FROM employee`);
     await client.end()
 
     res.status(200).json(dbRes.rows);
@@ -33,7 +33,7 @@ employeeRoutes.get('/:id', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query('SELECT "Id", "FirstName", "LastName", "Title", "DoB", "Gender", "DepartmentId", "MobileNumber"   FROM employee where "Id" = ' + req.params.id);
+    const dbRes = await client.query(`SELECT "Id", "FirstName", "LastName", "Title", "DoB", "Gender", "DepartmentId", "MobileNumber"   FROM employee where "Id" = ${req.params.id};`);
 
     await client.end()
 
@@ -57,16 +57,10 @@ employeeRoutes.post('/', async (req, res) => {
     })
     await client.connect()
 
+  const {FirstName, LastName, Title, DoB, Gender, DepartmentId, MobileNumber} = req.body;
+    
 
-    const firstName = req.body.FirstName;
-    const lastName = req.body.LastName;
-    const title = req.body.Title;
-    const dob = req.body.DoB;
-    const gender = req.body.Gender;
-    const departmentId = req.body.DepartmentId;
-    const mobileNumber = req.body.MobileNumber;
-
-    const dbRes = await client.query(`INSERT INTO employee ( "FirstName", "LastName", "Title", "DoB", "Gender", "DepartmentId", "MobileNumber") values ('${firstName}' , '${lastName}', '${title}', '${dob}', '${gender}', '${departmentId}','${mobileNumber}');`);
+    const dbRes = await client.query(`INSERT INTO employee ( "FirstName", "LastName", "Title", "DoB", "Gender", "DepartmentId", "MobileNumber") values ('${FirstName}' , '${LastName}', '${Title}', '${DoB}', '${Gender}', '${DepartmentId}','${MobileNumber}');`);
     await client.end()
 
     res.status(200).json(dbRes.rows);
@@ -108,19 +102,14 @@ employeeRoutes.patch('/:id', async (req, res) => {
 
     })
     await client.connect()
-    const firstName = req.body.FirstName;
-    const lastName = req.body.LastName;
-    const title = req.body.Title;
-    const dob = req.body.DoB;
-    const gender = req.body.Gender;
-    const departmentId = req.body.DepartmentId;
-    const mobileNumber = req.body.MobileNumber;
+    const{FirstName , LastName, Title, DoB, Gender, DepartmentId, MobileNumber} =  req.body;
+   
 
 
     const dbRes = await client.query(`UPDATE employee
-         SET "FirstName"='${firstName}', "LastName"='${lastName}', "Title"='${title}', "DoB"='${dob}',
-         "Gender"='${gender}', "DepartmentId"='${departmentId}', "MobileNumber"='${mobileNumber}' 
-   WHERE "Id" = ` + req.params.id);
+         SET "FirstName"='${FirstName}', "LastName"='${LastName}', "Title"='${Title}', "DoB"='${DoB}',
+         "Gender"='${Gender}', "DepartmentId"='${DepartmentId}', "MobileNumber"='${MobileNumber}' 
+   WHERE "Id" = ${req.params.id};`);
     await client.end()
 
     if (dbRes.rowCount === 0) {

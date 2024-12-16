@@ -15,7 +15,7 @@ addressRoutes.get('/', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query('SELECT * FROM employee')
+    const dbRes = await client.query(`SELECT * FROM employee`)
     await client.end()
 
     res.status(200).json(dbRes.rows);
@@ -36,7 +36,7 @@ addressRoutes.get('/:id', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query('SELECT "Id", "EmployeeId", "Address1", "Address2", "PostalCode", "City", "Phone1", "Phone2", "Province"  FROM address where "Id" = ' + req.params.id);
+    const dbRes = await client.query(`SELECT "Id", "EmployeeId", "Address1", "Address2", "PostalCode", "City", "Phone1", "Phone2", "Province"  FROM address where "Id" = ${req.params.id};` );
 
     await client.end()
 
@@ -60,16 +60,10 @@ addressRoutes.post('/', async (req, res) => {
     })
     await client.connect()
 
-    const employeeId = req.body.EmployeeId;
-    const address1 = req.body.Address1;
-    const address2 = req.body.Address2;
-    const postalCode = req.body.PostalCode;
-    const city = req.body.City;
-    const phone1 = req.body.Phone1;
-    const phone2 = req.body.Phone2;
-    const province = req.body.Province;
-
-    const dbRes = await client.query(`INSERT INTO address ("EmployeeId", "Address1", "Address2", "PostalCode", "City", "Phone1", "Phone2", "Province") values (` + employeeId + ` , '` + address1 + `', '` + address2 + `', `+ postalCode +`, '` + city + `', '`+ phone1 + `','` + phone2 + `','` + province + `');`);
+    const { EmployeeId, Address1, Address2, PostalCode, City, Phone1, Phone2, Province } = req.body;
+    const query = `INSERT INTO address ( "EmployeeId", "Address1", "Address2", "PostalCode", "City", "Phone1", "Phone2" ,"Province") values ('${EmployeeId}' , '${Address1}', '${Address2}', '${PostalCode}', '${City}', '${Phone1}','${Phone2}' ,'${Province}');`;
+    console.log(query);
+    const dbRes = await client.query(query);
     await client.end()
 
     res.status(200).json(dbRes.rows);
@@ -88,7 +82,7 @@ addressRoutes.delete('/:id', async (req, res) => {
     })
     await client.connect()
 
-    const dbRes = await client.query(' DELETE FROM address  WHERE "Id" = ' + req.params.id);
+    const dbRes = await client.query(`DELETE FROM address  WHERE "Id" = ` + req.params.id);
     await client.end()
 
     if (dbRes.rows.length == 0) {
@@ -110,20 +104,14 @@ addressRoutes.patch('/:id', async (req, res) => {
 
     })
     await client.connect()
-    const employeeId = req.body.EmployeeId;
-    const address1 = req.body.Address1;
-    const address2 = req.body.Address2;
-    const postalCode = req.body.PostalCode;
-    const city = req.body.City;
-    const phone1 = req.body.Phone1;
-    const phone2 = req.body.Phone2;
-    const province = req.body.Province;
+ 
+    const {EmployeeId, Address1, Address2, PostalCode, City, Phone1 ,Phone2 , Province} = req.body;
 
 
     const dbRes = await client.query(`UPDATE address
-         SET "EmployeeId"=${employeeId}, "Address1"='${address1}', "Address2"='${address2}', "PostalCode"=${postalCode}, "City"='${city}',
-         "Phone1"='${phone1}', "Phone2"='${phone2}', "Province"='${province}' 
-   WHERE "Id" = ` + req.params.id);
+         SET "EmployeeId"=${EmployeeId}, "Address1"='${Address1}', "Address2"='${Address2}', "PostalCode"=${PostalCode}, "City"='${City}',
+         "Phone1"='${Phone1}', "Phone2"='${Phone2}', "Province"='${Province}' 
+   WHERE "Id" = ${req.params.id};` );
     await client.end()
 
     if (dbRes.rowCount === 0) {
